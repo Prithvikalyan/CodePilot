@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CodePilot | AI Project Analyst</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
+
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+
+<div class="app-container">
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+
+        <div class="brand">
+            <div class="brand-icon">C</div>
+            <div>
+                <h2>CodePilot</h2>
+                <span>AI Project Analyst</span>
+            </div>
+        </div>
+
+        <div class="sidebar-section">
+            <p class="section-label">WORKSPACE</p>
+
+            <div class="workspace-card">
+                <div class="folder-icon">📁</div>
+                <div>
+                    <strong id="workspaceName">Sample Project</strong>
+                    <small>Current workspace</small>
+                </div>
+                <span class="status-dot"></span>
+            </div>
+        </div>
+
+        <div class="sidebar-section">
+            <p class="section-label">ANALYSIS TOOLS</p>
+
+            <button class="nav-item active" data-mode="project_qa">
+                <span>◈</span>
+                <span>Ask about project</span>
+            </button>
+
+            <button class="nav-item" data-mode="architecture">
+                <span>⌘</span>
+                <span>Architecture analysis</span>
+            </button>
+
+            <button class="nav-item" data-mode="code_review">
+                <span>⌁</span>
+                <span>Code review</span>
+            </button>
+
+            <button class="nav-item" data-mode="structure_review">
+                <span>▤</span>
+                <span>Structure review</span>
+            </button>
+
+            <button class="nav-item" data-mode="project_report">
+                <span>▧</span>
+                <span>Project report</span>
+            </button>
+        </div>
+
+        <div class="sidebar-bottom">
+            <div class="backend-status">
+                <span class="status-dot" id="connectionDot"></span>
+                <div>
+                    <strong id="connectionText">Checking backend...</strong>
+                    <small>FastAPI connection</small>
+                </div>
+            </div>
+
+            <a href="http://127.0.0.1:8000/docs"
+               target="_blank"
+               class="docs-link">
+                API Documentation ↗
+            </a>
+        </div>
+
+    </aside>
+
+
+    <!-- Main content -->
+    <main class="main-content">
+
+        <header class="topbar">
+            <div>
+                <p class="breadcrumb">Workspace / <strong>Overview</strong></p>
+                <h1>Project Analysis</h1>
+            </div>
+
+            <button id="themeToggle" class="theme-toggle" title="Toggle theme">
+                ☼
+            </button>
+        </header>
+
+
+        <!-- Welcome -->
+        <section class="welcome-section">
+            <div>
+                <span class="eyebrow">AI-POWERED DEVELOPMENT ASSISTANT</span>
+                <h2>Understand your project.<br>
+                    <span>Build with confidence.</span>
+                </h2>
+                <p>
+                    Analyze your source code, understand project architecture,
+                    identify potential bugs, and get practical recommendations.
+                </p>
+            </div>
+
+            <div class="welcome-icon">⌘</div>
+        </section>
+
+
+        <!-- Statistics -->
+        <section class="stats-grid">
+
+            <div class="stat-card">
+                <div class="stat-top">
+                    <span>Files scanned</span>
+                    <span class="stat-icon">▤</span>
+                </div>
+                <h2 id="totalFiles">--</h2>
+                <small>Supported project files</small>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-top">
+                    <span>Lines of code</span>
+                    <span class="stat-icon">⌁</span>
+                </div>
+                <h2 id="totalLines">--</h2>
+                <small>Total scanned lines</small>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-top">
+                    <span>Project status</span>
+                    <span class="stat-icon">●</span>
+                </div>
+                <h2 id="projectStatus">Checking</h2>
+                <small id="projectStatusText">Waiting for backend</small>
+            </div>
+
+        </section>
+
+
+        <!-- Workspace -->
+        <section class="workspace-grid">
+
+            <!-- Files panel -->
+            <div class="panel files-panel">
+
+                <div class="panel-heading">
+                    <div>
+                        <h3>Project files</h3>
+                        <p>Files discovered in your workspace</p>
+                    </div>
+                
+                    <span class="small-badge">SCANNED</span>
+                </div>
+                
+                <div class="project-selector">
+                    <label for="projectSelect">SELECT PROJECT</label>
+                
+                    <select id="projectSelect">
+                        <option value="">Loading projects...</option>
+                    </select>
+                
+                    <button
+                        type="button"
+                        id="addProjectButton"
+                        class="add-project-button"
+                    >
+                        <span>＋</span> Add Project
+                    </button>
+                
+                    <p id="addProjectStatus" class="add-project-status"></p>
+                </div>
+
+                <div id="fileList" class="file-list">
+                    <div class="empty-state">
+                        Loading project files...
+                    </div>
+                </div>
+
+                <div id="skippedFiles" class="skipped-files"></div>
+
+                <button id="refreshButton" class="secondary-button">
+                    ↻ Refresh project
+                </button>
+
+            </div>
+
+
+            <!-- Assistant panel -->
+            <div class="panel assistant-panel">
+
+                <div class="panel-heading">
+                    <div>
+                        <h3>CodePilot Assistant</h3>
+                        <p>What would you like to analyze?</p>
+                    </div>
+                    <span class="ai-badge">✦ AI</span>
+                </div>
+
+                <div class="mode-display">
+                    <span class="mode-symbol">◈</span>
+                    <div>
+                        <strong id="modeTitle">Ask about your project</strong>
+                        <small id="modeDescription">
+                            Ask questions about your source code.
+                        </small>
+                    </div>
+                </div>
+
+                <div class="suggestion-area">
+                    <p>TRY ASKING</p>
+
+                    <div class="suggestions" id="suggestions">
+                        <button class="suggestion-chip">
+                            Explain this project
+                        </button>
+                        <button class="suggestion-chip">
+                            What does main.py do?
+                        </button>
+                    </div>
+                </div>
+
+                <form id="analysisForm">
+
+                    <label for="userRequest">YOUR INSTRUCTIONS</label>
+
+                    <textarea
+                        id="userRequest"
+                        placeholder="Ask CodePilot something about your project..."
+                        required
+                        minlength="1"
+                        rows="5"></textarea>
+
+                    <div class="input-footer">
+                        <span>✦ Powered by NVIDIA AI</span>
+
+                        <button type="submit" id="analyzeButton">
+                            <span id="buttonText">Analyze project</span>
+                            <span>→</span>
+                        </button>
+                    </div>
+
+                </form>
+
+            </div>
+
+        </section>
+
+
+        <!-- Results -->
+        <section class="panel results-panel">
+
+            <div class="panel-heading results-heading">
+                <div>
+                    <h3>Analysis results</h3>
+                    <p>Your AI-generated project analysis will appear here.</p>
+                </div>
+
+                <button id="copyButton" class="secondary-button" disabled>
+                    Copy result
+                </button>
+            </div>
+
+            <div id="resultContent" class="result-content">
+
+                <div class="result-placeholder">
+                    <div class="placeholder-icon">✦</div>
+                    <h3>Ready when you are</h3>
+                    <p>
+                        Select an analysis tool, enter your question,
+                        and CodePilot will inspect your project.
+                    </p>
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <footer class="footer">
+            <span>CodePilot V1</span>
+            <span>Read-only project analysis</span>
+        </footer>
+
+    </main>
+
+</div>
+
+
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.1.6/purify.min.js"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+
+<script src="js/app.js"></script>
+
+</body>
+</html>

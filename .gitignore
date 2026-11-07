@@ -1,0 +1,35 @@
+# Environment variables and secrets
+.env
+.env.*
+!.env.example
+# Python virtual environments
+.venv/
+venv/
+env/
+
+# Python cache
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Local project registry
+data/projects.json
+data/projects.tmp
+
+# IDE settings
+.vscode/
+.idea/
+
+# Operating system files
+.DS_Store
+Thumbs.db
+
+# Test and coverage files
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Logs
+*.log
+
+test_classifier.py
